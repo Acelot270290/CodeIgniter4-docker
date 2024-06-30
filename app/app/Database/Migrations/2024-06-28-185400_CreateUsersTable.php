@@ -28,7 +28,23 @@ class CreateUsersTable extends Migration
                 'type' => 'VARCHAR',
                 'constraint' => '15',
             ],
-            'address' => [
+            'zip_code' => [
+                'type' => 'VARCHAR',
+                'constraint' => '10',
+            ],
+            'state' => [
+                'type' => 'VARCHAR',
+                'constraint' => '100',
+            ],
+            'city' => [
+                'type' => 'VARCHAR',
+                'constraint' => '100',
+            ],
+            'number' => [
+                'type' => 'VARCHAR',
+                'constraint' => '10',
+            ],
+            'street' => [
                 'type' => 'TEXT',
             ],
             'created_at' => [

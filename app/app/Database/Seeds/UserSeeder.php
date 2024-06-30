@@ -9,14 +9,18 @@ class UserSeeder extends Seeder
 {
     public function run()
     {
-        $faker = Factory::create();
+        $faker = Factory::create('pt_BR');
 
-        for ($i = 0; $i < 10; $i++) {
+        for ($i = 0; $i < 50; $i++) {
             $data = [
                 'name' => $faker->name,
-                'email' => $faker->email,
+                'email' => $faker->unique()->safeEmail,
                 'phone' => $faker->phoneNumber,
-                'address' => $faker->address,
+                'zip_code' => $faker->postcode,
+                'state' => $faker->state,
+                'city' => $faker->city,
+                'number' => $faker->buildingNumber,
+                'street' => $faker->streetAddress,
                 'created_at' => date('Y-m-d H:i:s'),
                 'updated_at' => date('Y-m-d H:i:s'),
             ];
