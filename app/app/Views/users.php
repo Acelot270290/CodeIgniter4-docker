@@ -11,6 +11,20 @@
     <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.bundle.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery.mask/1.14.16/jquery.mask.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    <style>
+        #loadingSpinner {
+            display: none;
+            position: fixed;
+            top: 50%;
+            left: 50%;
+        }
+
+        .dataTables_processing {
+            position: fixed;
+            top: 50%;
+            left: 50%;
+        }
+    </style>
 </head>
 
 <body>
@@ -21,8 +35,8 @@
         <button id="addUserButton" class="btn btn-primary ml-3" data-toggle="modal" data-target="#addUserModal">Adicionar Usuário</button>
     </div>
 
-    <div id="loadingSpinner" class="spinner-border text-primary" role="status" style="display: none;">
-        <span class="sr-only">Loading...</span>
+    <div id="loadingSpinner">
+        <img src="<?= base_url('load/Spinner.gif'); ?>" alt="Loading..." />
     </div>
 
     <table id="usersTable" class="table table-striped">
@@ -101,8 +115,6 @@
                 position: 'fixed',
                 top: '50%',
                 left: '50%',
-                transform: 'translate(-50%, -50%)',
-                zIndex: 1000
             });
         }
 
@@ -113,7 +125,19 @@
         $(document).ready(function() {
             var table = $('#usersTable').DataTable({
                 "language": {
-                    "url": "https://cdn.datatables.net/plug-ins/1.10.24/i18n/Portuguese-Brasil.json"
+                    "processing": "<div id='processingSpinner'><img src='<?= base_url('load/Spinner.gif'); ?>' alt='Processando...' /></div>",
+                    "lengthMenu": "Mostrar _MENU_ registros por página",
+                    "zeroRecords": "Nada encontrado - desculpe",
+                    "info": "Mostrando página _PAGE_ de _PAGES_",
+                    "infoEmpty": "Nenhum registro disponível",
+                    "infoFiltered": "(filtrado de _MAX_ registros no total)",
+                    "search": "Buscar:",
+                    "paginate": {
+                        "first": "Primeiro",
+                        "last": "Último",
+                        "next": "Próximo",
+                        "previous": "Anterior"
+                    }
                 },
                 "processing": true,
                 "serverSide": true,
@@ -259,6 +283,7 @@
 
             $('#usersTable').on('click', '.deleteButton', function() {
                 var data = table.row($(this).parents('tr')).data();
+                showLoading();
                 Swal.fire({
                     title: 'Você tem certeza?',
                     text: "Essa ação não pode ser desfeita!",
@@ -270,7 +295,6 @@
                     cancelButtonText: 'Cancelar'
                 }).then((result) => {
                     if (result.isConfirmed) {
-                        showLoading();
                         $.ajax({
                             url: "<?= site_url('users/delete'); ?>/" + data.id,
                             type: "DELETE",
@@ -293,6 +317,8 @@
                                 hideLoading();
                             }
                         });
+                    } else {
+                        hideLoading();
                     }
                 });
             });
